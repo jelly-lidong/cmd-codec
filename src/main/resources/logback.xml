@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 控制台输出 - 彩色日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!-- 彩色日志格式，优化对齐 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight([%-10.10thread]) %highlight(%-5level) %cyan(%-50.50logger{50}:%4line) : %msg%n</pattern>
+            <!-- 启用彩色输出 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>../../../../logs/cmd-codec.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/cmd-codec.%d{yyyy-MM-dd}.%protocol.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <!-- 文件日志格式，优化对齐但不包含颜色 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-10.10thread] %-5level %-50.50logger{50}:%4line : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 根日志级别 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+    <!-- 特定包的日志级别 -->
+    <logger name="com.iecas.cmd" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <!-- 测试时的日志级别 -->
+    <logger name="com.iecas.cmd.util.ExpressionValidator" level="WARN" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+</configuration>
